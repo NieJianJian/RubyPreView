@@ -2,9 +2,7 @@ package com.ruby.preview.Activity;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ruby.preview.R;
-import com.ruby.preview.utils.Font;
 import com.ruby.preview.utils.GetFileUtil;
 
 import java.io.File;
@@ -39,6 +36,11 @@ public class MainActivity extends Activity {
     private List<String> mUrlList, mFileList;
     private TextView mStatusTv, mShowPathTv, mUrlCountTv, mCurPageCountTv, mJumpUrlTv;
     private int mPreShowPagerCount;
+    private final String TEST_PATH = "http://mp.weixin.qq.com/s?__biz=MzIzMDA0NDE1MQ==" +
+            "&tempkey=Mqipdv0LeLOOlORlWSaxcZZEvmTZ9jmhUOMLm1pBcndIq7%2BO5T5tnBuWiP9rS7" +
+            "JF154R5NZ4n17lWrKEZmYseef4cy3fuVmsgjJS58zwfvqATecZrYaeKhdHQj8IDEQY8D2jqfQ" +
+            "6RSGPmNydFatu6Q%3D%3D&chksm=730222e94475abffee693ffb8712b91a680a49c54a777" +
+            "4eace942130620a44f7a1043b8814fa#rd";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         initView();
-
+        mWebView.loadUrl(TEST_PATH);
     }
 
     private void initView() {
@@ -73,6 +75,8 @@ public class MainActivity extends Activity {
 
         mWebView = (WebView) findViewById(R.id.main_webview);
         mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
+
         mWebView.setWebViewClient(new MyWebViewClient()); // 自动跳转
         mWebView.setWebChromeClient(new WebChromeClient());
     }
@@ -110,26 +114,27 @@ public class MainActivity extends Activity {
     }
 
 
-
     class MyWebViewClient extends WebViewClient {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            Log.i("niejianjian"," -> onPageStarted -> ");
             super.onPageStarted(view, url, favicon);
+            Log.i("niejianjian", " -> onPageStarted -> ");
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            Log.i("niejianjian"," -> onPageFinished -> ");
             super.onPageFinished(view, url);
-            mCurPageCountTv.setText((1 + mPreShowPagerCount) + " / " + mUrlList.size());
+            Log.i("niejianjian", " -> onPageFinished -> " + mWebView.getContentHeight() * mWebView.getScale());
+            mWebView.setScrollY((int) (mWebView.getContentHeight() * mWebView.getScale()
+                    - mWebView.getMeasuredHeight()));
+            /*mCurPageCountTv.setText((1 + mPreShowPagerCount) + " / " + mUrlList.size());*/
         }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Log.i("niejianjian", " -> request -> url = " + url);
-            String[] str = url.split("boy");
+            /*String[] str = url.split("boy");
             SpannableStringBuilder builder = new SpannableStringBuilder();
             for (int i = 0; i < str.length; i++) {
                 builder.append(str[i]);
@@ -137,9 +142,9 @@ public class MainActivity extends Activity {
                     builder.append(new Font("boy").color(Color.parseColor("#FF0000")));
                 }
             }
-            mJumpUrlTv.setText(builder);
+            mJumpUrlTv.setText(builder);*/
 
-            return super.shouldOverrideUrlLoading(view, url);
+            return false;
         }
     }
 
