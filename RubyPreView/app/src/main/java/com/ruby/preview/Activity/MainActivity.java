@@ -2,17 +2,24 @@ package com.ruby.preview.Activity;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ruby.preview.R;
+import com.ruby.preview.utils.Font;
 import com.ruby.preview.utils.GetFileUtil;
 
 import java.io.File;
@@ -33,7 +40,8 @@ public class MainActivity extends Activity {
     private Button mSearchBtn, mReadBtn, mPreviewBtn;
     private Button mLastBtn, mNextBtn;
     private WebView mWebView;
-    private List<String> mUrlList, mFileList;
+    private ListView mListView;
+    private List<String> mUrlList, mFileList, mFileNameList;
     private TextView mStatusTv, mShowPathTv, mUrlCountTv, mCurPageCountTv, mJumpUrlTv;
     private int mPreShowPagerCount;
     private final String TEST_PATH = "http://mp.weixin.qq.com/s?__biz=MzIzMDA0NDE1MQ==" +
@@ -48,12 +56,16 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         initView();
-        mWebView.loadUrl(TEST_PATH);
+//        mWebView.loadUrl(TEST_PATH);
     }
 
     private void initView() {
         mOnclickListener = new MyOnclickListener();
         mUrlList = new ArrayList<>();
+        mFileNameList = new ArrayList<>();
+        mFileList = new ArrayList<>();
+        mListView = (ListView) findViewById(R.id.main_listview);
+        mListView.setOnItemClickListener(new MyOnItemClickListener());
 
         mSearchBtn = (Button) findViewById(R.id.main_searchBtn);
         mSearchBtn.setOnClickListener(mOnclickListener);
@@ -74,9 +86,10 @@ public class MainActivity extends Activity {
         mJumpUrlTv = (TextView) findViewById(R.id.main_jumpUrlTv);
 
         mWebView = (WebView) findViewById(R.id.main_webview);
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setDomStorageEnabled(true);
-
+        mWebView.setVisibility(View.GONE);
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true); // 防止微信连接中的js失效
         mWebView.setWebViewClient(new MyWebViewClient()); // 自动跳转
         mWebView.setWebChromeClient(new WebChromeClient());
     }
@@ -128,13 +141,13 @@ public class MainActivity extends Activity {
             Log.i("niejianjian", " -> onPageFinished -> " + mWebView.getContentHeight() * mWebView.getScale());
             mWebView.setScrollY((int) (mWebView.getContentHeight() * mWebView.getScale()
                     - mWebView.getMeasuredHeight()));
-            /*mCurPageCountTv.setText((1 + mPreShowPagerCount) + " / " + mUrlList.size());*/
+            mCurPageCountTv.setText((1 + mPreShowPagerCount) + " / " + mUrlList.size());
         }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Log.i("niejianjian", " -> request -> url = " + url);
-            /*String[] str = url.split("boy");
+            String[] str = url.split("boy");
             SpannableStringBuilder builder = new SpannableStringBuilder();
             for (int i = 0; i < str.length; i++) {
                 builder.append(str[i]);
@@ -142,7 +155,7 @@ public class MainActivity extends Activity {
                     builder.append(new Font("boy").color(Color.parseColor("#FF0000")));
                 }
             }
-            mJumpUrlTv.setText(builder);*/
+            mJumpUrlTv.setText(builder);
 
             return false;
         }
@@ -154,19 +167,33 @@ public class MainActivity extends Activity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.main_searchBtn:
+                    mListView.setVisibility(View.VISIBLE);
+                    mWebView.setVisibility(View.GONE);
+                    mFileList.clear();
+                    mFileNameList.clear();
                     mFileList = GetFileUtil.getFileList(QQPATH, ".xls", true);
                     mStatusTv.setText("搜索到 " + mFileList.size() + " 个.xls个文件！");
                     if (mFileList.size() > 0) {
-                        mShowPathTv.setText("文件名称为：" + mFileList.get(0).split("\\/")[mFileList.get(0).split("\\/").length - 1]);
+                        for (String s : mFileList) {
+                            String name = s.split("\\/")[s.split("\\/").length - 1];
+                            mFileNameList.add(name);
+                        }
+                        String[] urlBuff = mFileNameList.toArray(new String[mFileList.size()]);
+//                        String[] urlBuff = (String[]) mFileNameList.toArray(new String[0]);
+                        Log.i("niejianjian", " -> urlBuff -> " + urlBuff.toString());
+                        mListView.setAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, urlBuff));
                     }
                     break;
                 case R.id.main_readBtn:
+                    mUrlList.clear();
                     readUrl();
                     if (mUrlList.size() > 0) {
                         mUrlCountTv.setText("共提取 " + mUrlList.size() + " 条链接");
                     }
                     break;
                 case R.id.main_previewBtn:
+                    mListView.setVisibility(View.GONE);
+                    mWebView.setVisibility(View.VISIBLE);
                     if (mUrlList.size() > 0) {
                         mWebView.loadUrl(mUrlList.get(0));
                     } else {
@@ -191,6 +218,14 @@ public class MainActivity extends Activity {
                     }
                     break;
             }
+        }
+    }
+
+    class MyOnItemClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            mShowPathTv.setText("Ruby，你选择了文件 ： " + mFileNameList.get(i));
         }
     }
 }
