@@ -1,7 +1,6 @@
 package com.ruby.preview.utils;
 
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class GetFileUtil {
      * @param IsIterative 是否进入子文件夹
      */
     private static void getFiles(String Path, String Extension, boolean IsIterative) {
-        Log.i("niejianjian"," -> Path -> " + Path);
+        lstFile.clear();
         File[] files = new File(Path).listFiles();
 
         for (int i = 0; i < files.length; i++) {

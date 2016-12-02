@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/main_searchBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="搜索文件"/>
+
+    <TextView
+        android:id="@+id/main_statusTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/main_searchBtn"
+        android:text="结果："
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/main_showPathTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_searchBtn"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:text="请在列表中选择文件"
+        android:textSize="15sp"/>
+
+    <Button
+        android:id="@+id/main_readBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_showPathTv"
+        android:text="提取文件连接"/>
+
+    <TextView
+        android:id="@+id/main_urlCountTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_showPathTv"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_toLeftOf="@+id/main_previewBtn"
+        android:layout_toRightOf="@+id/main_readBtn"
+        android:textSize="15sp"/>
+
+    <Button
+        android:id="@+id/main_previewBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/main_showPathTv"
+        android:text="开始预览"/>
+
+    <TextView
+        android:id="@+id/main_jumpUrlTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_readBtn"
+        android:layout_marginTop="5dp"
+        android:text="连接"
+        android:textSize="15sp"/>
+
+    <WebView
+        android:id="@+id/main_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/main_lastBtn"
+        android:layout_below="@+id/main_jumpUrlTv"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"/>
+
+    <ListView
+        android:id="@+id/main_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/main_lastBtn"
+        android:layout_below="@+id/main_jumpUrlTv"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/main_lastBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="上一页"/>
+
+    <Button
+        android:id="@+id/main_nextBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="下一页"/>
+
+    <TextView
+        android:id="@+id/main_curPageCountTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:text="0 / 0"
+        android:textSize="15sp"/>
+
+</RelativeLayout>
