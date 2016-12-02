@@ -180,6 +180,7 @@ public class FansActivity extends Activity {
                         }
                         String[] urlBuff = mFileNameList.toArray(new String[mFileList.size()]);
 //                        String[] urlBuff = (String[]) mFileNameList.toArray(new String[0]);
+                        Log.i("niejianjian", " -> urlBuff -> " + urlBuff.toString());
                         mListView.setAdapter(new ArrayAdapter<String>(FansActivity.this, android.R.layout.simple_list_item_1, urlBuff));
                     }
                     break;

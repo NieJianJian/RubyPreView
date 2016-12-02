@@ -44,11 +44,11 @@ public class PreviewActivity extends Activity {
     private List<String> mUrlList, mFileList, mFileNameList;
     private TextView mStatusTv, mShowPathTv, mUrlCountTv, mCurPageCountTv, mJumpUrlTv;
     private int mPreShowPagerCount;
-    private final String TEST_PATH = "http://mp.weixin.qq.com/s?__biz=MzIzMDA0NDE1MQ==" +
-            "&tempkey=Mqipdv0LeLOOlORlWSaxcZZEvmTZ9jmhUOMLm1pBcndIq7%2BO5T5tnBuWiP9rS7" +
-            "JF154R5NZ4n17lWrKEZmYseef4cy3fuVmsgjJS58zwfvqATecZrYaeKhdHQj8IDEQY8D2jqfQ" +
-            "6RSGPmNydFatu6Q%3D%3D&chksm=730222e94475abffee693ffb8712b91a680a49c54a777" +
-            "4eace942130620a44f7a1043b8814fa#rd";
+    private final String TEST_PATH = "http://mp.weixin.qq.com/s?__biz=MzAxMzY4MTA5MA==&" +
+            "tempkey=RyKgWnDAIn0IenE%2BCHbo8bA1UMK8ySdnZz8LBfCSpDaM2BU0CR2JUYL8X6L1ov0H" +
+            "jiCuCCc5mNV9Vh17IkggBG8FGFcL2EbMILSNrpuK%2B1%2BYntcMG0R18I%2BVZZHC%2BPx2y7" +
+            "q1k9%2FtDiEkFvGYCnDBPg%3D%3D&chksm=007d3fe9370ab6ff05744b24e0959daf122fb1f" +
+            "83642f08c39f9d4450b5a36b7e1952a81419c#rd";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

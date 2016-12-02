@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">iRuby</string>
+    <string name="ruby_name">iRuby</string>
+    <string name="xiu_name">王小美的APP</string>
+    <string name="Daisy">Daisy</string>
+    <string name="Ruby">Ruby</string>
+
 </resources>
