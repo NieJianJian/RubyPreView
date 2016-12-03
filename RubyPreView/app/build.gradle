@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile files('libs/jxl.jar')
     compile files('libs/testinagent_crash_release.jar')
+    compile files('libs/tncrash.jar')
 }
