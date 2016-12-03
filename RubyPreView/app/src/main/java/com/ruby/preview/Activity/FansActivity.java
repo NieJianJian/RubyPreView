@@ -44,11 +44,6 @@ public class FansActivity extends Activity {
     private List<String> mUrlList, mFileList, mFileNameList;
     private TextView mStatusTv, mShowPathTv, mUrlCountTv, mCurPageCountTv, mJumpUrlTv;
     private int mPreShowPagerCount;
-    private final String TEST_PATH = "http://mp.weixin.qq.com/s?__biz=MzIzMDA0NDE1MQ==" +
-            "&tempkey=Mqipdv0LeLOOlORlWSaxcZZEvmTZ9jmhUOMLm1pBcndIq7%2BO5T5tnBuWiP9rS7" +
-            "JF154R5NZ4n17lWrKEZmYseef4cy3fuVmsgjJS58zwfvqATecZrYaeKhdHQj8IDEQY8D2jqfQ" +
-            "6RSGPmNydFatu6Q%3D%3D&chksm=730222e94475abffee693ffb8712b91a680a49c54a777" +
-            "4eace942130620a44f7a1043b8814fa#rd";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +51,6 @@ public class FansActivity extends Activity {
         setContentView(R.layout.activity_fans);
 
         initView();
-//        mWebView.loadUrl(TEST_PATH);
     }
 
     private void initView() {
@@ -98,22 +92,28 @@ public class FansActivity extends Activity {
         try {
             InputStream inputStream = new FileInputStream(mFileList.get(mCurPosistion));
             Workbook workbook = Workbook.getWorkbook(inputStream);
-            Sheet sheet = workbook.getSheet(0);
-            int rows = sheet.getRows();
-            int cols = sheet.getColumns();
+            Sheet[] sheetCount = workbook.getSheets();
+            if (sheetCount.length > 0){
+                Log.i("niejianjian"," -> sheetCount -> " + sheetCount.length);
+                for (int i = 0; i < sheetCount.length; i ++){
+                    Sheet sheet = workbook.getSheet(i);
+                    int rows = sheet.getRows();
+                    int cols = sheet.getColumns();
 
-            Log.i("niejianjian", " -> rows -> " + rows);
-            Log.i("niejianjian", " -> cols -> " + cols);
+                    Log.i("niejianjian", " -> rows -> " + rows);
+                    Log.i("niejianjian", " -> cols -> " + cols);
 
-            for (int i = 0; i < rows; i++) {
-                StringBuilder builder = new StringBuilder("");
-                if (sheet.getRow(i).length == 1) {
-                    // getCell(cols,row)
-                    String str = sheet.getCell(0, i).getContents();
-                    if (str.contains("http")) {
-                        builder.append(str);
-                        Log.i("niejianjian", " -> builder -> " + builder);
-                        mUrlList.add(builder.toString());
+                    for (int m = 0; m < rows; m++) {
+                        StringBuilder builder = new StringBuilder("");
+                        if (sheet.getRow(m).length == 1) {
+                            // getCell(cols,row)
+                            String str = sheet.getCell(0, m).getContents();
+                            if (str.contains("http")) {
+                                builder.append(str);
+                                Log.i("niejianjian", " -> builder -> " + builder);
+                                mUrlList.add(builder.toString());
+                            }
+                        }
                     }
                 }
             }
