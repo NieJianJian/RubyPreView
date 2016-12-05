@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -37,13 +38,14 @@ public class PreviewActivity extends Activity {
 
     private final static String QQPATH = File.separatorChar + "Tencent" + File.separatorChar + "QQfile_recv";
     private MyOnclickListener mOnclickListener;
-    private Button mSearchBtn, mReadBtn, mPreviewBtn;
+    private Button mSearchBtn, mReadBtn, mPreviewBtn, mGoBottomBtn;
     private Button mLastBtn, mNextBtn;
     private WebView mWebView;
     private ListView mListView;
     private List<String> mUrlList, mFileList, mFileNameList;
     private TextView mStatusTv, mShowPathTv, mUrlCountTv, mCurPageCountTv, mJumpUrlTv;
     private int mPreShowPagerCount;
+    private WindowManager wm;
     private final String TEST_PATH = "http://mp.weixin.qq.com/s?__biz=MzAxMzY4MTA5MA==&" +
             "tempkey=RyKgWnDAIn0IenE%2BCHbo8bA1UMK8ySdnZz8LBfCSpDaM2BU0CR2JUYL8X6L1ov0H" +
             "jiCuCCc5mNV9Vh17IkggBG8FGFcL2EbMILSNrpuK%2B1%2BYntcMG0R18I%2BVZZHC%2BPx2y7" +
@@ -66,6 +68,7 @@ public class PreviewActivity extends Activity {
         mFileList = new ArrayList<>();
         mListView = (ListView) findViewById(R.id.main_listview);
         mListView.setOnItemClickListener(new MyOnItemClickListener());
+        wm = this.getWindowManager();
 
         mSearchBtn = (Button) findViewById(R.id.main_searchBtn);
         mSearchBtn.setOnClickListener(mOnclickListener);
@@ -77,6 +80,8 @@ public class PreviewActivity extends Activity {
         mLastBtn.setOnClickListener(mOnclickListener);
         mNextBtn = (Button) findViewById(R.id.main_nextBtn);
         mNextBtn.setOnClickListener(mOnclickListener);
+        mGoBottomBtn = (Button) findViewById(R.id.main_goBottomBtn);
+        mGoBottomBtn.setOnClickListener(mOnclickListener);
 
         mStatusTv = (TextView) findViewById(R.id.main_statusTv);
         mStatusTv.setText("请点击按钮搜索.xls文件");
@@ -137,7 +142,7 @@ public class PreviewActivity extends Activity {
             super.onPageFinished(view, url);
             Log.i("niejianjian", " -> onPageFinished -> " + mWebView.getContentHeight() * mWebView.getScale());
             mWebView.setScrollY((int) (mWebView.getContentHeight() * mWebView.getScale()
-                    - mWebView.getMeasuredHeight()));
+                    - mWebView.getMeasuredHeight()) + 100);
             mCurPageCountTv.setText((1 + mPreShowPagerCount) + " / " + mUrlList.size());
         }
 
@@ -212,6 +217,12 @@ public class PreviewActivity extends Activity {
                         mPreShowPagerCount++;
                         mWebView.loadUrl(mUrlList.get(mPreShowPagerCount));
                     }
+                    break;
+                case R.id.main_goBottomBtn:
+//                    Log.i("niejianjian", " -> onPageFinished -> " + mWebView.getContentHeight() * mWebView.getScale());
+//                    mWebView.setScrollY((int) (mWebView.getContentHeight() * mWebView.getScale()
+//                            - mWebView.getMeasuredHeight() - wm.getDefaultDisplay().getHeight() / 3));
+                    mWebView.findAll("阅读原文");
                     break;
             }
         }
