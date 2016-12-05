@@ -102,13 +102,22 @@
         android:layout_alignParentRight="true"
         android:text="下一页"/>
 
+    <Button
+        android:id="@+id/main_goBottomBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/main_nextBtn"
+        android:text="到底部"/>
+
     <TextView
         android:id="@+id/main_curPageCountTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="12dp"
+        android:layout_marginLeft="50dp"
+        android:layout_toRightOf="@+id/main_lastBtn"
         android:text="0 / 0"
         android:textSize="15sp"/>
 
