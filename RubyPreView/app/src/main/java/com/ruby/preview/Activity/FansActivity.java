@@ -40,8 +40,8 @@ public class FansActivity extends Activity {
     private Button mSearchBtn, mReadBtn, mPreviewBtn;
     private Button mLastBtn, mNextBtn;
     private WebView mWebView;
-    private ListView mListView;
-    private List<String> mUrlList, mFileList, mFileNameList;
+    private ListView mListView, mResultListView;
+    private List<String> mUrlList, mFileList, mFileNameList, mCheckUrlList;
     private TextView mStatusTv, mShowPathTv, mUrlCountTv, mCurPageCountTv, mJumpUrlTv;
     private int mPreShowPagerCount;
 
@@ -58,8 +58,12 @@ public class FansActivity extends Activity {
         mUrlList = new ArrayList<>();
         mFileNameList = new ArrayList<>();
         mFileList = new ArrayList<>();
+        mCheckUrlList = new ArrayList<>();
+
         mListView = (ListView) findViewById(R.id.main_listview);
         mListView.setOnItemClickListener(new MyOnItemClickListener());
+        mResultListView = (ListView) findViewById(R.id.main_resultListview);
+        mResultListView.setOnItemClickListener(new MyOnItemClickListener1());
 
         mSearchBtn = (Button) findViewById(R.id.main_searchBtn);
         mSearchBtn.setOnClickListener(mOnclickListener);
@@ -93,9 +97,9 @@ public class FansActivity extends Activity {
             InputStream inputStream = new FileInputStream(mFileList.get(mCurPosistion));
             Workbook workbook = Workbook.getWorkbook(inputStream);
             Sheet[] sheetCount = workbook.getSheets();
-            if (sheetCount.length > 0){
-                Log.i("niejianjian"," -> sheetCount -> " + sheetCount.length);
-                for (int i = 0; i < sheetCount.length; i ++){
+            if (sheetCount.length > 0) {
+                Log.i("niejianjian", " -> sheetCount -> " + sheetCount.length);
+                for (int i = 0; i < sheetCount.length; i++) {
                     Sheet sheet = workbook.getSheet(i);
                     int rows = sheet.getRows();
                     int cols = sheet.getColumns();
@@ -126,6 +130,7 @@ public class FansActivity extends Activity {
         }
     }
 
+    private boolean isJump = false;
 
     class MyWebViewClient extends WebViewClient {
 
@@ -142,6 +147,24 @@ public class FansActivity extends Activity {
             mWebView.setScrollY((int) (mWebView.getContentHeight() * mWebView.getScale()
                     - mWebView.getMeasuredHeight()));
             mCurPageCountTv.setText((1 + mPreShowPagerCount) + " / " + mUrlList.size());
+            if (isJump) {
+                isJump = false;
+                if (mPreShowPagerCount == (mUrlList.size() - 1)) {
+                    Toast.makeText(FansActivity.this, "后面已经没有了", Toast.LENGTH_SHORT).show();
+//                    mWebView.loadUrl(mUrlList.get(mUrlList.size() - 1));
+                    if (mCheckUrlList.size() > 0) {
+                        String[] urlBuff = mCheckUrlList.toArray(new String[mCheckUrlList.size()]);
+                        mResultListView.setVisibility(View.VISIBLE);
+                        mWebView.setVisibility(View.GONE);
+                        mResultListView.setAdapter(new ArrayAdapter<String>(FansActivity.this, android.R.layout.simple_list_item_1, urlBuff));
+                        mCheckUrlList.clear();
+                    }
+//                        String[] urlBuff = (String[]) mFileNameList.toArray(new String[0]);
+                } else {
+                    mPreShowPagerCount++;
+                    mWebView.loadUrl(mUrlList.get(mPreShowPagerCount));
+                }
+            }
         }
 
         @Override
@@ -155,7 +178,9 @@ public class FansActivity extends Activity {
                     builder.append(new Font("boy").color(Color.parseColor("#FF0000")));
                 }
             }
+            mCheckUrlList.add(builder.toString());
             mJumpUrlTv.setText(builder);
+            isJump = true;
 
             return false;
         }
@@ -169,8 +194,12 @@ public class FansActivity extends Activity {
                 case R.id.main_searchBtn:
                     mListView.setVisibility(View.VISIBLE);
                     mWebView.setVisibility(View.GONE);
+                    mResultListView.setVisibility(View.GONE);
+                    mCheckUrlList.clear();
+                    mUrlList.clear();
                     mFileList.clear();
                     mFileNameList.clear();
+                    mPreShowPagerCount = 0;
                     mFileList = GetFileUtil.getFileList(QQPATH, ".xls", true);
                     mStatusTv.setText("搜索到 " + mFileList.size() + " 个.xls个文件！");
                     if (mFileList.size() > 0) {
@@ -209,9 +238,9 @@ public class FansActivity extends Activity {
                     }
                     break;
                 case R.id.main_nextBtn:
-                    if (mPreShowPagerCount == mUrlList.size()) {
+                    if (mPreShowPagerCount == (mUrlList.size() - 1)) {
                         Toast.makeText(FansActivity.this, "后面已经没有了", Toast.LENGTH_SHORT).show();
-                        mWebView.loadUrl(mUrlList.get(mUrlList.size() - 1));
+//                        mWebView.loadUrl(mUrlList.get(mUrlList.size() - 1));
                     } else {
                         mPreShowPagerCount++;
                         mWebView.loadUrl(mUrlList.get(mPreShowPagerCount));
@@ -229,6 +258,14 @@ public class FansActivity extends Activity {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             mCurPosistion = i;
             mShowPathTv.setText("Ruby，你选择了文件 ： " + mFileNameList.get(i));
+        }
+    }
+
+    class MyOnItemClickListener1 implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Toast.makeText(FansActivity.this, mUrlList.get(i).split("=K")[1], Toast.LENGTH_SHORT).show();
         }
     }
 }
