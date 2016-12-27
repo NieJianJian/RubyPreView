@@ -38,8 +38,8 @@
         android:layout_below="@+id/main_showPathTv"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
-        android:text="链接数"
         android:layout_toLeftOf="@+id/main_previewBtn"
+        android:text="链接数"
         android:textSize="15sp"/>
 
     <Button
@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:text="上一页"/>
+        android:text="上页"/>
 
     <Button
         android:id="@+id/main_nextBtn"
@@ -93,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="下一页"/>
+        android:text="下页"/>
 
     <Button
         android:id="@+id/main_goBottomBtn"
@@ -101,16 +101,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/main_nextBtn"
-        android:text="到底部"/>
+        android:text="底部"/>
+
+    <Button
+        android:id="@+id/main_goTopBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/main_lastBtn"
+        android:text="顶部"/>
 
     <TextView
         android:id="@+id/main_curPageCountTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="12dp"
-        android:layout_marginLeft="50dp"
-        android:layout_toRightOf="@+id/main_lastBtn"
         android:text="0 / 0"
         android:textSize="15sp"/>
 

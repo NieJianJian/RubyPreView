@@ -38,7 +38,7 @@ public class PreviewActivity extends Activity {
 
     private final static String QQPATH = File.separatorChar + "Tencent" + File.separatorChar + "QQfile_recv";
     private MyOnclickListener mOnclickListener;
-    private Button mSearchBtn, mPreviewBtn, mGoBottomBtn;
+    private Button mSearchBtn, mPreviewBtn, mGoBottomBtn, mGoTopBtn;
     private Button mLastBtn, mNextBtn;
     private WebView mWebView;
     private ListView mListView;
@@ -80,6 +80,8 @@ public class PreviewActivity extends Activity {
         mNextBtn.setOnClickListener(mOnclickListener);
         mGoBottomBtn = (Button) findViewById(R.id.main_goBottomBtn);
         mGoBottomBtn.setOnClickListener(mOnclickListener);
+        mGoTopBtn = (Button) findViewById(R.id.main_goTopBtn);
+        mGoTopBtn.setOnClickListener(mOnclickListener);
 
         mStatusTv = (TextView) findViewById(R.id.main_statusTv);
         mStatusTv.setText("请点击按钮搜索.xls文件");
@@ -225,6 +227,9 @@ public class PreviewActivity extends Activity {
 //                    mWebView.setScrollY((int) (mWebView.getContentHeight() * mWebView.getScale()
 //                            - mWebView.getMeasuredHeight() - wm.getDefaultDisplay().getHeight() / 3));
                     mWebView.findAll("阅读原文");
+                    break;
+                case R.id.main_goTopBtn:
+                    mWebView.setScrollY(0);
                     break;
             }
         }
