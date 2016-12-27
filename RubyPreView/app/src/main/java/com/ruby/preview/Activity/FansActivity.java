@@ -37,7 +37,7 @@ public class FansActivity extends Activity {
 
     private final static String QQPATH = File.separatorChar + "Tencent" + File.separatorChar + "QQfile_recv";
     private MyOnclickListener mOnclickListener;
-    private Button mSearchBtn, mReadBtn, mPreviewBtn;
+    private Button mSearchBtn, mPreviewBtn;
     private Button mLastBtn, mNextBtn;
     private WebView mWebView;
     private ListView mListView, mResultListView;
@@ -67,8 +67,6 @@ public class FansActivity extends Activity {
 
         mSearchBtn = (Button) findViewById(R.id.main_searchBtn);
         mSearchBtn.setOnClickListener(mOnclickListener);
-        mReadBtn = (Button) findViewById(R.id.main_readBtn);
-        mReadBtn.setOnClickListener(mOnclickListener);
         mPreviewBtn = (Button) findViewById(R.id.main_previewBtn);
         mPreviewBtn.setOnClickListener(mOnclickListener);
         mLastBtn = (Button) findViewById(R.id.main_lastBtn);
@@ -90,6 +88,12 @@ public class FansActivity extends Activity {
         webSettings.setDomStorageEnabled(true); // 防止微信连接中的js失效
         mWebView.setWebViewClient(new MyWebViewClient()); // 自动跳转
         mWebView.setWebChromeClient(new WebChromeClient());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getFileList();
     }
 
     private void readUrl() {
@@ -186,39 +190,36 @@ public class FansActivity extends Activity {
         }
     }
 
+    private void getFileList(){
+        mListView.setVisibility(View.VISIBLE);
+        mWebView.setVisibility(View.GONE);
+        mResultListView.setVisibility(View.GONE);
+        mCheckUrlList.clear();
+        mUrlList.clear();
+        mFileList.clear();
+        mFileNameList.clear();
+        mPreShowPagerCount = 0;
+        mFileList = GetFileUtil.getFileList(QQPATH, ".xls", true);
+        mStatusTv.setText("搜索到 " + mFileList.size() + " 个.xls个文件！");
+        if (mFileList.size() > 0) {
+            for (String s : mFileList) {
+                String name = s.split("\\/")[s.split("\\/").length - 1];
+                mFileNameList.add(name);
+            }
+            String[] urlBuff = mFileNameList.toArray(new String[mFileList.size()]);
+//                        String[] urlBuff = (String[]) mFileNameList.toArray(new String[0]);
+            Log.i("niejianjian", " -> urlBuff -> " + urlBuff.toString());
+            mListView.setAdapter(new ArrayAdapter<String>(FansActivity.this, android.R.layout.simple_list_item_1, urlBuff));
+        }
+    }
+
     class MyOnclickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.main_searchBtn:
-                    mListView.setVisibility(View.VISIBLE);
-                    mWebView.setVisibility(View.GONE);
-                    mResultListView.setVisibility(View.GONE);
-                    mCheckUrlList.clear();
-                    mUrlList.clear();
-                    mFileList.clear();
-                    mFileNameList.clear();
-                    mPreShowPagerCount = 0;
-                    mFileList = GetFileUtil.getFileList(QQPATH, ".xls", true);
-                    mStatusTv.setText("搜索到 " + mFileList.size() + " 个.xls个文件！");
-                    if (mFileList.size() > 0) {
-                        for (String s : mFileList) {
-                            String name = s.split("\\/")[s.split("\\/").length - 1];
-                            mFileNameList.add(name);
-                        }
-                        String[] urlBuff = mFileNameList.toArray(new String[mFileList.size()]);
-//                        String[] urlBuff = (String[]) mFileNameList.toArray(new String[0]);
-                        Log.i("niejianjian", " -> urlBuff -> " + urlBuff.toString());
-                        mListView.setAdapter(new ArrayAdapter<String>(FansActivity.this, android.R.layout.simple_list_item_1, urlBuff));
-                    }
-                    break;
-                case R.id.main_readBtn:
-                    mUrlList.clear();
-                    readUrl();
-                    if (mUrlList.size() > 0) {
-                        mUrlCountTv.setText("共提取 " + mUrlList.size() + " 条链接");
-                    }
+                    getFileList();
                     break;
                 case R.id.main_previewBtn:
                     mListView.setVisibility(View.GONE);
@@ -258,6 +259,12 @@ public class FansActivity extends Activity {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             mCurPosistion = i;
             mShowPathTv.setText("Ruby，你选择了文件 ： " + mFileNameList.get(i));
+
+            mUrlList.clear();
+            readUrl();
+            if (mUrlList.size() > 0) {
+                mUrlCountTv.setText("共提取 " + mUrlList.size() + " 条链接");
+            }
         }
     }
 
