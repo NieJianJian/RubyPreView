@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ruby.preview.R;
+import com.ruby.preview.utils.CycleProgressDialog;
 import com.ruby.preview.utils.GetFileUtil;
 
 import java.io.File;
@@ -102,7 +103,7 @@ public class PreviewActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        dialog = new CycleProgressDialog.Builder(this).message("加载中，Ruby别急...").build();
         getFileList();
     }
 
@@ -135,6 +136,7 @@ public class PreviewActivity extends Activity {
         }
     }
 
+    CycleProgressDialog dialog = null;
 
     class MyWebViewClient extends WebViewClient {
 
@@ -142,6 +144,7 @@ public class PreviewActivity extends Activity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             Log.i("niejianjian", " -> onPageStarted -> ");
+            dialog.show();
         }
 
         @Override
@@ -151,6 +154,7 @@ public class PreviewActivity extends Activity {
             mWebView.setScrollY((int) (mWebView.getContentHeight() * mWebView.getScale()
                     - mWebView.getMeasuredHeight()) + 100);*/
             mCurPageCountTv.setText((1 + mPreShowPagerCount) + " / " + mUrlList.size());
+            dialog.cancel();
         }
 
         @Override
