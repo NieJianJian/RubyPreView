@@ -31,13 +31,6 @@
         android:text="请在列表中选择文件"
         android:textSize="15sp"/>
 
-    <Button
-        android:id="@+id/main_readBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/main_showPathTv"
-        android:text="提取文件连接"/>
-
     <TextView
         android:id="@+id/main_urlCountTv"
         android:layout_width="match_parent"
@@ -45,8 +38,8 @@
         android:layout_below="@+id/main_showPathTv"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
+        android:text="链接数"
         android:layout_toLeftOf="@+id/main_previewBtn"
-        android:layout_toRightOf="@+id/main_readBtn"
         android:textSize="15sp"/>
 
     <Button
@@ -61,7 +54,7 @@
         android:id="@+id/main_jumpUrlTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_readBtn"
+        android:layout_below="@+id/main_previewBtn"
         android:layout_marginTop="5dp"
         android:text="连接"
         android:textSize="15sp"/>

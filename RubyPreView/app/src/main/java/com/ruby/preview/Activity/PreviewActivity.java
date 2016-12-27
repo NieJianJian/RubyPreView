@@ -38,7 +38,7 @@ public class PreviewActivity extends Activity {
 
     private final static String QQPATH = File.separatorChar + "Tencent" + File.separatorChar + "QQfile_recv";
     private MyOnclickListener mOnclickListener;
-    private Button mSearchBtn, mReadBtn, mPreviewBtn, mGoBottomBtn;
+    private Button mSearchBtn, mPreviewBtn, mGoBottomBtn;
     private Button mLastBtn, mNextBtn;
     private WebView mWebView;
     private ListView mListView;
@@ -72,8 +72,6 @@ public class PreviewActivity extends Activity {
 
         mSearchBtn = (Button) findViewById(R.id.main_searchBtn);
         mSearchBtn.setOnClickListener(mOnclickListener);
-        mReadBtn = (Button) findViewById(R.id.main_readBtn);
-        mReadBtn.setOnClickListener(mOnclickListener);
         mPreviewBtn = (Button) findViewById(R.id.main_previewBtn);
         mPreviewBtn.setOnClickListener(mOnclickListener);
         mLastBtn = (Button) findViewById(R.id.main_lastBtn);
@@ -97,6 +95,13 @@ public class PreviewActivity extends Activity {
         webSettings.setDomStorageEnabled(true); // 防止微信连接中的js失效
         mWebView.setWebViewClient(new MyWebViewClient()); // 自动跳转
         mWebView.setWebChromeClient(new WebChromeClient());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getFileList();
     }
 
     private void readUrl() {
@@ -140,9 +145,9 @@ public class PreviewActivity extends Activity {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            Log.i("niejianjian", " -> onPageFinished -> " + mWebView.getContentHeight() * mWebView.getScale());
+            /*Log.i("niejianjian", " -> onPageFinished -> " + mWebView.getContentHeight() * mWebView.getScale());
             mWebView.setScrollY((int) (mWebView.getContentHeight() * mWebView.getScale()
-                    - mWebView.getMeasuredHeight()) + 100);
+                    - mWebView.getMeasuredHeight()) + 100);*/
             mCurPageCountTv.setText((1 + mPreShowPagerCount) + " / " + mUrlList.size());
         }
 
@@ -163,34 +168,31 @@ public class PreviewActivity extends Activity {
         }
     }
 
+    private void getFileList() {
+        mListView.setVisibility(View.VISIBLE);
+        mWebView.setVisibility(View.GONE);
+        mFileList.clear();
+        mFileNameList.clear();
+        mFileList = GetFileUtil.getFileList(QQPATH, ".xls", true);
+        mStatusTv.setText("搜索到 " + mFileList.size() + " 个.xls个文件！");
+        if (mFileList.size() > 0) {
+            for (String s : mFileList) {
+                String name = s.split("\\/")[s.split("\\/").length - 1];
+                mFileNameList.add(name);
+            }
+            String[] urlBuff = mFileNameList.toArray(new String[mFileList.size()]);
+//                        String[] urlBuff = (String[]) mFileNameList.toArray(new String[0]);
+            mListView.setAdapter(new ArrayAdapter<String>(PreviewActivity.this, android.R.layout.simple_list_item_1, urlBuff));
+        }
+    }
+
     class MyOnclickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.main_searchBtn:
-                    mListView.setVisibility(View.VISIBLE);
-                    mWebView.setVisibility(View.GONE);
-                    mFileList.clear();
-                    mFileNameList.clear();
-                    mFileList = GetFileUtil.getFileList(QQPATH, ".xls", true);
-                    mStatusTv.setText("搜索到 " + mFileList.size() + " 个.xls个文件！");
-                    if (mFileList.size() > 0) {
-                        for (String s : mFileList) {
-                            String name = s.split("\\/")[s.split("\\/").length - 1];
-                            mFileNameList.add(name);
-                        }
-                        String[] urlBuff = mFileNameList.toArray(new String[mFileList.size()]);
-//                        String[] urlBuff = (String[]) mFileNameList.toArray(new String[0]);
-                        mListView.setAdapter(new ArrayAdapter<String>(PreviewActivity.this, android.R.layout.simple_list_item_1, urlBuff));
-                    }
-                    break;
-                case R.id.main_readBtn:
-                    mUrlList.clear();
-                    readUrl();
-                    if (mUrlList.size() > 0) {
-                        mUrlCountTv.setText("共提取 " + mUrlList.size() + " 条链接");
-                    }
+                    getFileList();
                     break;
                 case R.id.main_previewBtn:
                     mListView.setVisibility(View.GONE);
@@ -236,6 +238,12 @@ public class PreviewActivity extends Activity {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             mCurPosistion = i;
             mShowPathTv.setText("Ruby，你选择了文件 ： " + mFileNameList.get(i));
+
+            mUrlList.clear();
+            readUrl();
+            if (mUrlList.size() > 0) {
+                mUrlCountTv.setText("共提取 " + mUrlList.size() + " 条链接");
+            }
         }
     }
 }
