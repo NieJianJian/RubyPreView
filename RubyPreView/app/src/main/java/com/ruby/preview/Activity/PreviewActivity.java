@@ -59,6 +59,7 @@ public class PreviewActivity extends Activity {
         setContentView(R.layout.activity_preview);
 
         initView();
+        getFileList();
 //        mWebView.loadUrl(TEST_PATH);
     }
 
@@ -98,13 +99,8 @@ public class PreviewActivity extends Activity {
         webSettings.setDomStorageEnabled(true); // 防止微信连接中的js失效
         mWebView.setWebViewClient(new MyWebViewClient()); // 自动跳转
         mWebView.setWebChromeClient(new WebChromeClient());
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
         dialog = new CycleProgressDialog.Builder(this).message("加载中，Ruby别急...").build();
-        getFileList();
     }
 
     private void readUrl() {
@@ -190,6 +186,10 @@ public class PreviewActivity extends Activity {
 //                        String[] urlBuff = (String[]) mFileNameList.toArray(new String[0]);
             mListView.setAdapter(new ArrayAdapter<String>(PreviewActivity.this, android.R.layout.simple_list_item_1, urlBuff));
         }
+
+        mShowPathTv.setText("请在列表中选择文件");
+        mUrlCountTv.setText("链接数");
+        mCurPageCountTv.setText("0 / 0");
     }
 
     class MyOnclickListener implements View.OnClickListener {

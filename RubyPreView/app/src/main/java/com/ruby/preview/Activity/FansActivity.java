@@ -51,6 +51,7 @@ public class FansActivity extends Activity {
         setContentView(R.layout.activity_fans);
 
         initView();
+        getFileList();
     }
 
     private void initView() {
@@ -93,7 +94,6 @@ public class FansActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        getFileList();
     }
 
     private void readUrl() {
@@ -211,6 +211,10 @@ public class FansActivity extends Activity {
             Log.i("niejianjian", " -> urlBuff -> " + urlBuff.toString());
             mListView.setAdapter(new ArrayAdapter<String>(FansActivity.this, android.R.layout.simple_list_item_1, urlBuff));
         }
+
+        mShowPathTv.setText("请在列表中选择文件");
+        mUrlCountTv.setText("链接数");
+        mCurPageCountTv.setText("0 / 0");
     }
 
     class MyOnclickListener implements View.OnClickListener {
