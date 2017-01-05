@@ -112,6 +112,16 @@ public class FansActivity extends Activity {
                     Log.i("niejianjian", " -> cols -> " + cols);
 
                     for (int m = 0; m < rows; m++) {
+                        for (int j = 0; j < cols; j++) {
+                            String strUrl = sheet.getCell(j, m).getContents();
+                            Log.i("niejianjian", " -> builder -> " + strUrl);
+                            if (strUrl.contains("http")) {
+                                mUrlList.add(strUrl);
+                            }
+                        }
+                    }
+
+                    /*for (int m = 0; m < rows; m++) {
                         StringBuilder builder = new StringBuilder("");
                         if (sheet.getRow(m).length == 1) {
                             // getCell(cols,row)
@@ -122,7 +132,7 @@ public class FansActivity extends Activity {
                                 mUrlList.add(builder.toString());
                             }
                         }
-                    }
+                    }*/
                 }
             }
             Log.i("niejianjian", " -> urlList -> " + mUrlList.size());
