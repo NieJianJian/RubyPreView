@@ -1,20 +1,31 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "com.ruby.preview"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        release {
+            storeFile file("F:\\Wroks\\GitRepo\\ruby.jks")
+            storePassword "ruby520"
+            keyAlias "ruby"
+            keyPassword "ruby520"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -22,7 +33,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:appcompat-v7:23.+'
     compile files('libs/jxl.jar')
     compile files('libs/tncrash.jar')
 }
